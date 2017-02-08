@@ -1,0 +1,16 @@
+PODS:
+  - QueryString (0.1.0)
+
+DEPENDENCIES:
+  - QueryString (from `..`)
+
+EXTERNAL SOURCES:
+  QueryString:
+    :path: ".."
+
+SPEC CHECKSUMS:
+  QueryString: 289a4a3f8d01ce0b3621d6f4d9fccc2811cb2024
+
+PODFILE CHECKSUM: 2210cf6f982b868c7aaef9860eb5eb077e7c20d9
+
+COCOAPODS: 1.1.1
