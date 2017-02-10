@@ -44,4 +44,20 @@ class QueryStringTests: XCTestCase {
         XCTAssertEqual(qs.append(to: "user/123?another=yyy"), "user/123?another=yyy&query=xxx")
     }
     
+    func testPathEmpty() {
+        XCTAssertNil(QueryString(path: ""))
+        XCTAssertNil(QueryString(path: "user/123?"))
+        XCTAssertNil(QueryString(path: "user/123??x=1"))
+    }
+    
+    func testPathWithOneQuery() {
+        let qs = QueryString(path: "user/123?another=yyy")
+        XCTAssertEqual(qs?.description, "another=yyy")
+    }
+    
+    func testPathWithTwoQueries() {
+        let qs = QueryString(path: "user/123?another=yyy&query=xxx")
+        XCTAssertEqual(qs?.description, "another=yyy&query=xxx")
+    }
+    
 }
