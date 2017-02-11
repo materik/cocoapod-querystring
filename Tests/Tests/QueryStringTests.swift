@@ -12,8 +12,7 @@ class QueryStringTests: XCTestCase {
     }
     
     func testOneQuery() {
-        var qs = QueryString()
-        qs.add(key: "query", value: "xxx")
+        let qs = QueryString(key: "query", value: "xxx")
         XCTAssertEqual(qs.description, "query=xxx")
         XCTAssertEqual(qs.append(to: "user/123"), "user/123?query=xxx")
     }

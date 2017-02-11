@@ -2,7 +2,7 @@
   "name": "QueryString",
   "version": "0.1.0",
   "homepage": "https://github.com/materik/querystring.git",
-  "summary": "HTTP mock framework",
+  "summary": "Model for parsing and appending query strings to URLs",
   "license": {
     "type": "MIT",
     "file": "LICENSE.md"

@@ -11,6 +11,10 @@ public struct QueryString {
 
     public init() {}
     
+    public init(key: String, value: String) {
+        self.add(key: key, value: value)
+    }
+    
     public init?(path: String) {
         let components = path.components(separatedBy: self.queryStart)
         guard components.count == 2, let queryStrings = components.last else {
