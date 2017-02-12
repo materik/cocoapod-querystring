@@ -3,9 +3,9 @@ import UIKit
 
 public struct QueryString {
 
-    private let keyValueSep: String = "="
-    private let querySep: String = "&"
-    private let queryStart: String = "?"
+    private static let keyValueSep: String = "="
+    private static let querySep: String = "&"
+    private static let queryStart: String = "?"
 
     fileprivate var values: [String: String] = [:]
 
@@ -15,15 +15,26 @@ public struct QueryString {
         self.add(key: key, value: value)
     }
     
-    public init?(path: String) {
-        let components = path.components(separatedBy: self.queryStart)
-        guard components.count == 2, let queryStrings = components.last else {
+    public init?(url: String) {
+        var url = url
+        self.init(url: &url)
+    }
+    
+    public init?(url: inout String) {
+        let components = url.components(separatedBy: QueryString.queryStart)
+        guard components.count == 2, let string = components.last else {
             return nil
         }
         
-        let queries = queryStrings.components(separatedBy: self.querySep)
+        url = QueryString.strip(from: url)
+        
+        self.init(string: string)
+    }
+    
+    public init?(string: String) {
+        let queries = string.components(separatedBy: QueryString.querySep)
         for query in queries {
-            let keyValue = query.components(separatedBy: self.keyValueSep)
+            let keyValue = query.components(separatedBy: QueryString.keyValueSep)
             guard keyValue.count == 2, let key = keyValue.first, let value = keyValue.last else {
                 continue
             }
@@ -42,26 +53,26 @@ public struct QueryString {
         )
     }
 
-    public func append(to path: String) -> String {
+    public func append(to url: String) -> String {
         guard !self.values.isEmpty else {
-            return path
+            return url
         }
-        var queryString = QueryString(path: path) ?? QueryString()
+        var url = url
+        var queryString = QueryString(url: &url) ?? QueryString()
         queryString = queryString + self
-        let path = QueryString.strip(from: path)
-        return "\(path)\(self.queryStart)\(queryString.queryString)"
+        return "\(url)\(QueryString.queryStart)\(queryString.queryString)"
     }
 
     fileprivate var queryString: String {
         var values: [String] = []
         for (key, value) in self.values {
-            values.append("\(key)\(self.keyValueSep)\(value)")
+            values.append("\(key)\(QueryString.keyValueSep)\(value)")
         }
-        return values.joined(separator: self.querySep)
+        return values.joined(separator: QueryString.querySep)
     }
     
-    static func strip(from path: String) -> String {
-        return path.components(separatedBy: QueryString().queryStart).first!
+    private static func strip(from url: String) -> String {
+        return url.components(separatedBy: QueryString.queryStart).first!
     }
 
 }

@@ -44,19 +44,39 @@ class QueryStringTests: XCTestCase {
     }
     
     func testPathEmpty() {
-        XCTAssertNil(QueryString(path: ""))
-        XCTAssertNil(QueryString(path: "user/123?"))
-        XCTAssertNil(QueryString(path: "user/123??x=1"))
+        var url1 = ""
+        XCTAssertNil(QueryString(url: &url1))
+        XCTAssertEqual(url1, "")
+        var url2 = "user/123?"
+        XCTAssertNil(QueryString(url: &url2))
+        XCTAssertEqual(url2, "user/123")
+        var url3 = "user/123??x=1"
+        XCTAssertNil(QueryString(url: &url3))
+        XCTAssertEqual(url3, "user/123??x=1")
     }
     
     func testPathWithOneQuery() {
-        let qs = QueryString(path: "user/123?another=yyy")
+        let qs = QueryString(url: "user/123?another=yyy")
         XCTAssertEqual(qs?.description, "another=yyy")
     }
     
     func testPathWithTwoQueries() {
-        let qs = QueryString(path: "user/123?another=yyy&query=xxx")
+        let qs = QueryString(url: "user/123?another=yyy&query=xxx")
         XCTAssertEqual(qs?.description, "another=yyy&query=xxx")
+    }
+    
+    func testStripPath() {
+        var url = "user/123?query=xxx"
+        let qs = QueryString(url: &url)
+        XCTAssertEqual(url, "user/123")
+        XCTAssertEqual(qs?.description, "query=xxx")
+    }
+    
+    func testString() {
+        let qs1 = QueryString(string: "another=yyy")
+        XCTAssertEqual(qs1?.description, "another=yyy")
+        let qs2 = QueryString(string: "another=yyy&query=xxx")
+        XCTAssertEqual(qs2?.description, "another=yyy&query=xxx")
     }
     
 }
