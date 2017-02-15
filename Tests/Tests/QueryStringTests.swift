@@ -7,13 +7,13 @@ class QueryStringTests: XCTestCase {
     
     func testNoQuery() {
         let qs = QueryString()
-        XCTAssertEqual(qs.description, "")
+        XCTAssertEqual(qs.queryString, "")
         XCTAssertEqual(qs.append(to: "user/123"), "user/123")
     }
     
     func testOneQuery() {
         let qs = QueryString(key: "query", value: "xxx")
-        XCTAssertEqual(qs.description, "query=xxx")
+        XCTAssertEqual(qs.queryString, "query=xxx")
         XCTAssertEqual(qs.append(to: "user/123"), "user/123?query=xxx")
     }
     
@@ -21,19 +21,19 @@ class QueryStringTests: XCTestCase {
         var qs = QueryString()
         qs.add(key: "query", value: "xxx")
         qs.add(key: "another", value: "yyy")
-        XCTAssertEqual(qs.description, "another=yyy&query=xxx")
+        XCTAssertEqual(qs.queryString, "another=yyy&query=xxx")
     }
     
     func testSpace() {
         var qs = QueryString()
         qs.add(key: "query", value: "xx x")
-        XCTAssertEqual(qs.description, "query=xx%20x")
+        XCTAssertEqual(qs.queryString, "query=xx%20x")
     }
     
     func testSpecialCharacters() {
         var qs = QueryString()
         qs.add(key: "redirect", value: "zmartaapp://")
-        XCTAssertEqual(qs.description, "redirect=zmartaapp://")
+        XCTAssertEqual(qs.queryString, "redirect=zmartaapp://")
     }
     
     func testWithPathAlreadyContainingQuestionMark() {
@@ -57,26 +57,40 @@ class QueryStringTests: XCTestCase {
     
     func testPathWithOneQuery() {
         let qs = QueryString(url: "user/123?another=yyy")
-        XCTAssertEqual(qs?.description, "another=yyy")
+        XCTAssertEqual(qs?.queryString, "another=yyy")
     }
     
     func testPathWithTwoQueries() {
         let qs = QueryString(url: "user/123?another=yyy&query=xxx")
-        XCTAssertEqual(qs?.description, "another=yyy&query=xxx")
+        XCTAssertEqual(qs?.queryString, "another=yyy&query=xxx")
     }
     
     func testStripPath() {
         var url = "user/123?query=xxx"
         let qs = QueryString(url: &url)
         XCTAssertEqual(url, "user/123")
-        XCTAssertEqual(qs?.description, "query=xxx")
+        XCTAssertEqual(qs?.queryString, "query=xxx")
     }
     
     func testString() {
         let qs1 = QueryString(string: "another=yyy")
-        XCTAssertEqual(qs1?.description, "another=yyy")
+        XCTAssertEqual(qs1?.queryString, "another=yyy")
         let qs2 = QueryString(string: "another=yyy&query=xxx")
-        XCTAssertEqual(qs2?.description, "another=yyy&query=xxx")
+        XCTAssertEqual(qs2?.queryString, "another=yyy&query=xxx")
+    }
+    
+    func testExpressibleByDictionaryLiteral() {
+        let qs: QueryString = [
+            "another": "yyy",
+            "query": "xxx"
+        ]
+        XCTAssertEqual(qs.queryString, "another=yyy&query=xxx")
+    }
+    
+    func testSubscript() {
+        let qs = QueryString(string: "another=yyy&query=xxx")
+        XCTAssertEqual(qs?["another"], "yyy")
+        XCTAssertEqual(qs?["query"], "xxx")
     }
     
 }

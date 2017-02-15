@@ -63,7 +63,7 @@ public struct QueryString {
         return "\(url)\(QueryString.queryStart)\(queryString.queryString)"
     }
 
-    fileprivate var queryString: String {
+    var queryString: String {
         var values: [String] = []
         for (key, value) in self.values {
             values.append("\(key)\(QueryString.keyValueSep)\(value)")
@@ -80,9 +80,48 @@ public struct QueryString {
 extension QueryString: CustomStringConvertible {
 
     public var description: String {
-        return self.queryString
+        return "QueryString(\(self.queryString))"
     }
 
+}
+
+extension QueryString: ExpressibleByDictionaryLiteral {
+    
+    public typealias Key = String
+    public typealias Value = String
+    
+    public init(dictionaryLiteral elements: (Key, Value)...) {
+        for (key, value) in elements {
+            self.add(key: key, value: value)
+        }
+    }
+    
+}
+
+extension QueryString: Collection {
+    
+    public typealias Index = DictionaryIndex<Key, Value>
+    
+    public var startIndex: Index {
+        return self.values.startIndex
+    }
+    
+    public var endIndex: Index {
+        return self.values.endIndex
+    }
+    
+    public func index(after index: Index) -> Index {
+        return self.values.index(after: index)
+    }
+    
+    public subscript(index: Index) -> (key: Key, value: Value) {
+        return self.values[index]
+    }
+    
+    public subscript(index: Key) -> Value? {
+        return self.values[index]
+    }
+    
 }
 
 public func + (lhs: QueryString, rhs: QueryString) -> QueryString {
