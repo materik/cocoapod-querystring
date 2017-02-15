@@ -93,4 +93,12 @@ class QueryStringTests: XCTestCase {
         XCTAssertEqual(qs?["query"], "xxx")
     }
     
+    func testEquatable() {
+        XCTAssertEqual(QueryString(), QueryString())
+        XCTAssertEqual(QueryString(string: "another=yyy"), QueryString(string: "another=yyy"))
+        XCTAssertEqual(QueryString(string: "another=yyy&query=xxx"),
+                       QueryString(string: "query=xxx&another=yyy"))
+        XCTAssertNotEqual(QueryString(string: "another=yyy"), QueryString(string: "another=xxx"))
+    }
+    
 }

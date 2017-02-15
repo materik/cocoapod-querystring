@@ -124,6 +124,12 @@ extension QueryString: Collection {
     
 }
 
+extension QueryString: Equatable {}
+
+public func == (lhs: QueryString, rhs: QueryString) -> Bool {
+    return lhs.values == rhs.values
+}
+
 public func + (lhs: QueryString, rhs: QueryString) -> QueryString {
     var lhs = lhs
     for (key, value) in rhs.values {
