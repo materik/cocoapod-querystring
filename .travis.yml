@@ -1,19 +1,20 @@
 language: swift
-osx_image: xcode8
+osx_image: xcode9
 branches:
   only:
     - master
 before_install:
   - export LANG=en_US.UTF-8
   - brew update
-  - gem install cocoapods -v 1.1.1
+  - gem install cocoapods -v 1.5.3
   - gem install specific_install
 install:
+  - pod repo update
   - cd ${TEST_SUITE} && pod install && cd ..
 env:
   global:
     - DESTINATION="platform=iOS Simulator,name=iPhone 7,OS=10.0"
-    - IOS_SDK="iphonesimulator10.0"
+    - IOS_SDK="iphonesimulator11.0"
     - SCHEME="Tests"
     - TEST_SUITE="Tests"
 script:
